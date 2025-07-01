@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Same CSS as before for games and game area -->
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #191c22;
+      font-family: system-ui, sans-serif;
+      user-select: none;
+    }
+    * {
+      user-select: none !important;
+    }
+    .games-box {
+      color: #fff;
+      font-size: 18px;
+      text-align: center;
+      min-width: 230px;
+      max-width: 90vw;
+      max-height: 80vh;
+      outline: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 auto;
+      margin-top: 18px;
+    }
+    .games-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      user-select: none;
+    }
+    .game-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #262e37;
+      color: #fff;
+      border-radius: 12px;
+      border: none;
+      padding: 11px 0;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 500;
+      transition: background 0.18s;
+      outline: none;
+      width: 100%;
+      gap: 7px;
+      user-select: none;
+    }
+    .game-btn:active { background: #1a1b1d; }
+    .game-area {
+      margin: 0 auto;
+      margin-top: 15px;
+      min-height: 60px;
+      min-width: 140px;
+      max-width: 320px;
+      user-select: none;
+    }
+    /* --- Mini Tic Tac Toe --- */
+    .tictactoe-board {
+      display: grid;
+      grid-template-columns: repeat(3, 40px);
+      grid-template-rows: repeat(3, 40px);
+      gap: 4px;
+      margin: 0 auto;
+      justify-content: center;
+      user-select: none;
+    }
+    .ttt-cell {
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      color: #222;
+      border-radius: 7px;
+      font-size: 27px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.16s, color 0.16s;
+      user-select: none;
+    }
+    .ttt-cell:active { background: #e8e8e8; }
+    .ttt-cell.win { background: #8fffab; }
+    .game-status {
+      margin-top: 10px;
+      font-size: 15px;
+      color: #fff;
+      min-height: 18px;
+      user-select: none;
+    }
+    .restart-btn {
+      background: #51b7ff;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 16px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background 0.18s;
+      user-select: none;
+    }
+    .restart-btn:active { background: #2777a8; }
+    /* --- Game: Click the Dot --- */
+    .dot-game-area {
+      width: 160px;
+      height: 160px;
+      background: #222a;
+      border-radius: 18px;
+      position: relative;
+      margin: 0 auto;
+      overflow: hidden;
+      user-select: none;
+    }
+    .dot {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #51b7ff;
+      box-shadow: 0 0 10px #51b7ff77;
+      cursor: pointer;
+      user-select: none;
+    }
+    .dot-score {
+      margin-top: 14px;
+      color: #fff;
+      font-size: 16px;
+      user-select: none;
+    }
+    .dot-timer {
+      color: #aee;
+      font-size: 14px;
+      margin-bottom: 4px;
+      user-select: none;
+    }
+    /* --- Game: Memory Flip --- */
+    .memory-board {
+      display: grid;
+      grid-template-columns: repeat(4, 38px);
+      grid-template-rows: repeat(2, 38px);
+      gap: 6px;
+      justify-content: center;
+      margin: 0 auto;
+      user-select: none;
+    }
+    .memory-card {
+      width: 38px;
+      height: 38px;
+      background: #fff;
+      border-radius: 8px;
+      font-size: 22px;
+      color: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.16s, color 0.16s;
+      box-shadow: 0 1px 5px #0002;
+      user-select: none;
+      position: relative;
+    }
+    .memory-card.flipped {
+      background: #51b7ff;
+      color: #fff;
+      cursor: default;
+    }
+    .memory-card.matched {
+      background: #8fffab;
+      color: #fff;
+      cursor: default;
+    }
+    .memory-status {
+      margin-top: 10px;
+      font-size: 15px;
+      color: #fff;
+      min-height: 18px;
+      user-select: none;
+    }
+    .memory-restart-btn {
+      background: #51b7ff;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 16px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background 0.18s;
+      user-select: none;
+    }
+    .memory-restart-btn:active { background: #2777a8; }
+  </style>
+</head>
+<body>
+  <div class="games-box" tabindex="0">
+    <div style="font-weight:600; font-size:1.2em; margin-bottom:14px;margin-top:5px;">Pick a Game</div>
+    <ul class="games-list" id="gamesList">
+      <li><button class="game-btn" data-game="tictactoe">Tic Tac Toe</button></li>
+      <li><button class="game-btn" data-game="dot">Click the Dot</button></li>
+      <li><button class="game-btn" data-game="memory">Memory Flip</button></li>
+    </ul>
+    <div class="game-area" id="gameArea"></div>
+  </div>
+  <script>
+    const gamesList = document.getElementById('gamesList');
+    const gameArea = document.getElementById('gameArea');
+
+    gamesList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('game-btn')) {
+        const game = e.target.getAttribute('data-game');
+        loadGame(game);
+      }
+    });
+
+    function loadGame(game) {
+      gameArea.innerHTML = '';
+      if (game === 'tictactoe') {
+        createTicTacToe(gameArea);
+      } else if (game === 'dot') {
+        createDotGame(gameArea);
+      } else if (game === 'memory') {
+        createMemoryGame(gameArea);
+      }
+    }
+    function createTicTacToe(container) {
+      let board = Array(9).fill('');
+      let turn = 'X';
+      let winner = null;
+      let moves = 0;
+      const boardEl = document.createElement('div');
+      boardEl.className = 'tictactoe-board';
+      const cells = [];
+      for (let i = 0; i < 9; ++i) {
+        const cell = document.createElement('div');
+        cell.className = 'ttt-cell';
+        cell.addEventListener('click', () => {
+          if (board[i] || winner) return;
+          board[i] = turn;
+          cell.textContent = turn;
+          moves++;
+          if (checkWin(turn)) {
+            winner = turn;
+            showWin();
+            statusEl.textContent = `Winner: ${turn}!`;
+          } else if (moves === 9) {
+            statusEl.textContent = "It's a draw!";
+          } else {
+            turn = turn === 'X' ? 'O' : 'X';
+            statusEl.textContent = `Turn: ${turn}`;
+          }
+        });
+        cells.push(cell);
+        boardEl.appendChild(cell);
+      }
+      function checkWin(player) {
+        const wins = [
+          [0,1,2],[3,4,5],[6,7,8],
+          [0,3,6],[1,4,7],[2,5,8],
+          [0,4,8],[2,4,6]
+        ];
+        return wins.some(line => line.every(idx => board[idx] === player));
+      }
+      function showWin() {
+        const wins = [
+          [0,1,2],[3,4,5],[6,7,8],
+          [0,3,6],[1,4,7],[2,5,8],
+          [0,4,8],[2,4,6]
+        ];
+        wins.forEach(line => {
+          if (line.every(idx => board[idx] === winner)) {
+            line.forEach(idx => cells[idx].classList.add('win'));
+          }
+        });
+      }
+      const statusEl = document.createElement('div');
+      statusEl.className = 'game-status';
+      statusEl.textContent = `Turn: ${turn}`;
+      const restartBtn = document.createElement('button');
+      restartBtn.className = 'restart-btn';
+      restartBtn.textContent = "Restart";
+      restartBtn.onclick = () => {
+        board = Array(9).fill(''); winner=null; turn='X'; moves=0;
+        cells.forEach(c => {c.textContent=''; c.classList.remove('win');});
+        statusEl.textContent = `Turn: ${turn}`;
+      };
+      container.appendChild(boardEl);
+      container.appendChild(statusEl);
+      container.appendChild(restartBtn);
+    }
+
+    function createDotGame(container) {
+      let score = 0;
+      let time = 20;
+      let timer = null;
+      let dot = null;
+      let running = false;
+      const area = document.createElement('div');
+      area.className = 'dot-game-area';
+      let timerEl = document.createElement('div');
+      timerEl.className = 'dot-timer';
+      let scoreEl = document.createElement('div');
+      scoreEl.className = 'dot-score';
+      let startBtn = document.createElement('button');
+      startBtn.className = 'restart-btn';
+      startBtn.textContent = "Start Game";
+      area.appendChild(timerEl);
+      area.appendChild(scoreEl);
+      area.appendChild(startBtn);
+      container.appendChild(area);
+
+      function spawnDot() {
+        if (dot) dot.remove();
+        dot = document.createElement('div');
+        dot.className = 'dot';
+        const pad = 16;
+        const x = Math.random() * (160 - 32 - pad) + pad;
+        const y = Math.random() * (160 - 32 - pad) + pad;
+        dot.style.left = `${x}px`;
+        dot.style.top = `${y}px`;
+        dot.onclick = () => {
+          if (!running) return;
+          score++;
+          scoreEl.textContent = "Score: " + score;
+          spawnDot();
+        };
+        area.appendChild(dot);
+      }
+      function updateTimer() {
+        timerEl.textContent = "Time: " + time + "s";
+      }
+      function startGame() {
+        score = 0;
+        time = 20;
+        running = true;
+        scoreEl.textContent = "Score: 0";
+        updateTimer();
+        if (dot) dot.remove();
+        spawnDot();
+        startBtn.style.display = "none";
+        timer = setInterval(() => {
+          time--;
+          updateTimer();
+          if (time <= 0) {
+            clearInterval(timer);
+            running = false;
+            timerEl.textContent = "Game Over!";
+            if (dot) dot.remove();
+            startBtn.textContent = "Restart";
+            startBtn.style.display = "";
+          }
+        }, 1000);
+      }
+      startBtn.onclick = startGame;
+    }
+
+    function createMemoryGame(container) {
+      const icons = ['🍎','🍎','🍌','🍌','🍒','🍒','🍇','🍇'];
+      let shuffled = shuffle(icons.slice());
+      let state = Array(8).fill(false); // matched
+      let flipped = [];
+      let moves = 0;
+      let matchedCount = 0;
+      const boardEl = document.createElement('div');
+      boardEl.className = 'memory-board';
+      const cards = [];
+      for (let i = 0; i < 8; ++i) {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.textContent = '';
+        card.onclick = () => {
+          if (state[i] || flipped.includes(i) || flipped.length === 2) return;
+          card.textContent = shuffled[i];
+          card.classList.add('flipped');
+          flipped.push(i);
+          if (flipped.length === 2) {
+            moves++;
+            setTimeout(() => {
+              if (shuffled[flipped[0]] === shuffled[flipped[1]]) {
+                state[flipped[0]] = state[flipped[1]] = true;
+                cards[flipped[0]].classList.add('matched');
+                cards[flipped[1]].classList.add('matched');
+                matchedCount += 2;
+                if (matchedCount === 8) {
+                  statusEl.textContent = `You win in ${moves} moves!`;
+                }
+              } else {
+                cards[flipped[0]].classList.remove('flipped');
+                cards[flipped[1]].classList.remove('flipped');
+                cards[flipped[0]].textContent = '';
+                cards[flipped[1]].textContent = '';
+              }
+              flipped = [];
+            }, 600);
+          }
+        };
+        cards.push(card);
+        boardEl.appendChild(card);
+      }
+      function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+      const statusEl = document.createElement('div');
+      statusEl.className = 'memory-status';
+      statusEl.textContent = `Find all pairs!`;
+      const restartBtn = document.createElement('button');
+      restartBtn.className = 'memory-restart-btn';
+      restartBtn.textContent = "Restart";
+      restartBtn.onclick = () => {
+        shuffled = shuffle(icons.slice());
+        state.fill(false);
+        flipped = [];
+        moves = 0;
+        matchedCount = 0;
+        cards.forEach((c,i) => {
+          c.textContent = '';
+          c.classList.remove('matched','flipped');
+        });
+        statusEl.textContent = `Find all pairs!`;
+      };
+      container.appendChild(boardEl);
+      container.appendChild(statusEl);
+      container.appendChild(restartBtn);
+    }
+  </script>
+</body>
+</html>
