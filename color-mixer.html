@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color Mixer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #191c22;
+      font-family: system-ui, sans-serif;
+      user-select: none;
+    }
+    * { user-select: none !important; }
+    .color-mixer-box {
+      color: #fff;
+      font-size: 18px;
+      text-align: center;
+      min-width: 230px;
+      max-width: 90vw;
+      max-height: 80vh;
+      outline: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 auto;
+      margin-top: 18px;
+    }
+    .upfor-modal-content {
+      margin: 18px 0 0 0;
+      width: 100%;
+    }
+    .slider-row {
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+    }
+    .slider-label {
+      min-width: 65px;
+      font-size: 15px;
+      color: #aee;
+      font-weight: 500;
+      user-select: none;
+    }
+    .slider-value {
+      min-width: 30px;
+      font-size: 15px;
+      color: #fff;
+      font-weight: bold;
+      user-select: none;
+    }
+    input[type="range"] {
+      width: 120px;
+      accent-color: #72e2ff;
+      user-select: none;
+    }
+    #color-square {
+      margin-top: 20px;
+      width: 70px;
+      height: 70px;
+      border-radius: 14px;
+      background: #fff;
+      border: 2px solid #333;
+      box-shadow: 0 2px 12px #0003;
+      margin-bottom: 10px;
+      transition: background 0.2s;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="color-mixer-box" tabindex="0">
+    <div style="font-weight:600; font-size:1.2em; margin-bottom:4px;">Color Mixer</div>
+    <div style="font-size: 14px; color: #bce; margin-bottom:10px;">
+      Mix your own color! Adjust RGB sliders below.<br>Tap the square to copy the color HEX.
+    </div>
+    <div id="color-square"></div>
+    <div class="upfor-modal-content">
+      <div class="slider-row">
+        <span class="slider-label">Red</span>
+        <input type="range" min="0" max="255" value="255" id="sliderR">
+        <span class="slider-value" id="valueR">255</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Green</span>
+        <input type="range" min="0" max="255" value="255" id="sliderG">
+        <span class="slider-value" id="valueG">255</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Blue</span>
+        <input type="range" min="0" max="255" value="255" id="sliderB">
+        <span class="slider-value" id="valueB">255</span>
+      </div>
+    </div>
+    <div id="copiedMsg" style="display:none;color:#8fffab;font-size:14px;margin-top:5px;">Copied!</div>
+  </div>
+  <script>
+    const sliderR = document.getElementById('sliderR');
+    const sliderG = document.getElementById('sliderG');
+    const sliderB = document.getElementById('sliderB');
+    const valueR = document.getElementById('valueR');
+    const valueG = document.getElementById('valueG');
+    const valueB = document.getElementById('valueB');
+    const colorSquare = document.getElementById('color-square');
+    const copiedMsg = document.getElementById('copiedMsg');
+    function updateColor() {
+      const r = Number(sliderR.value), g = Number(sliderG.value), b = Number(sliderB.value);
+      valueR.textContent = r;
+      valueG.textContent = g;
+      valueB.textContent = b;
+      colorSquare.style.background = `rgb(${r},${g},${b})`;
+      colorSquare.setAttribute('data-hex', rgbToHex(r,g,b));
+    }
+    function rgbToHex(r,g,b) {
+      return "#" + [r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
+    }
+    sliderR.addEventListener('input', updateColor);
+    sliderG.addEventListener('input', updateColor);
+    sliderB.addEventListener('input', updateColor);
+    updateColor();
+    colorSquare.addEventListener('click', () => {
+      const hex = colorSquare.getAttribute('data-hex');
+      navigator.clipboard && navigator.clipboard.writeText(hex);
+      copiedMsg.style.display = "block";
+      setTimeout(()=>{copiedMsg.style.display="none"}, 850);
+    });
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('dragstart', e => e.preventDefault());
+  </script>
+</body>
+</html>
