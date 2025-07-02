@@ -16,6 +16,13 @@
       font-family: system-ui, sans-serif;
       user-select: none;
     }
+    /* Prevent highlighting/selection for the entire document */
+    * {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -ms-user-select: none !important;
+      -moz-user-select: none !important;
+    }
     .dynamic-island {
       width: 140px;
       height: 36px;
